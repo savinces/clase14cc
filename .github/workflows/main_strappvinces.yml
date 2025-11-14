@@ -1,0 +1,53 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - strappvinces
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ctnstrapp.azurecr.io/
+          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_DB85126D8E124C838638FA931E5E7648 }}
+          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_F8643693D5D2438CBADB387E47BBDD8B }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ctnstrapp.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_DB85126D8E124C838638FA931E5E7648 }}/strappc:${{ github.sha }}
+          file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    
+    needs: build
+    
+    steps:
+      
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'strappvinces'
+          slot-name: 'Production'
+          images: 'ctnstrapp.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_DB85126D8E124C838638FA931E5E7648 }}/strappc:${{ github.sha }}'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E3A6B49CC8374961A0184E627C8410B9 }}
