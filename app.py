@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Título de la app
-st.title("Calculadora de IMC 💪")
+st.title("Calculadora de IMC Vinces💪")
 
 st.write("Esta aplicación calcula tu Índice de Masa Corporal (IMC) y determina tu nivel de peso.")
 
@@ -27,4 +27,5 @@ if st.button("Calcular IMC"):
             st.error("Obesidad 🔴")
     else:
         st.warning("Por favor, ingresa valores válidos.")
+
 
