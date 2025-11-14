@@ -5,7 +5,7 @@ st.title("Calculadora de IMC 💪")
 
 st.write("Esta aplicación calcula tu Índice de Masa Corporal (IMC) y determina tu nivel de peso.")
 
-# Entradas de usuario
+# Entradas de Sebastian
 peso = st.number_input("Ingresa tu peso (kg):", min_value=0.0, format="%.2f")
 estatura = st.number_input("Ingresa tu estatura (m):", min_value=0.0, format="%.2f")
 
@@ -27,3 +27,4 @@ if st.button("Calcular IMC"):
             st.error("Obesidad 🔴")
     else:
         st.warning("Por favor, ingresa valores válidos.")
+
